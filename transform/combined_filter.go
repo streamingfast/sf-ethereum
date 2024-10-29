@@ -267,7 +267,13 @@ func getcombinedFilterFunc(callFilters []*CallToFilter, logFilters []*LogFilter)
 
 func logKeys(trace *pbeth.TransactionTrace, prefix string) map[string]bool {
 	out := make(map[string]bool)
+	if trace.Receipt == nil {
+		return out
+	}
 	for _, log := range trace.Receipt.Logs {
+		if log == nil {
+			continue
+		}
 		out[prefix+hex.EncodeToString(log.Address)] = true
 		if len(log.Topics) != 0 {
 			out[prefix+hex.EncodeToString(log.Topics[0])] = true
