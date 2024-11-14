@@ -7,6 +7,7 @@ for instructions to keep up to date.
 ## Unreleased
 
 * Adding nil safety check on the `CombinedFilter` and looping over the transaction_trace receipts
+* Bump `substreams` and `dmetering` to latest version adding the `outputModuleHash` to metering sender.
 
 ## v2.7.5
 

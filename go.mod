@@ -18,20 +18,20 @@ require (
 	github.com/streamingfast/bstream v0.0.2-0.20240916154503-c9c5c8bbeca0
 	github.com/streamingfast/cli v0.0.4-0.20240412191021-5f81842cb71d
 	github.com/streamingfast/derr v0.0.0-20230515163924-8570aaa43fe1
-	github.com/streamingfast/dmetrics v0.0.0-20230919161904-206fa8ebd545
+	github.com/streamingfast/dmetrics v0.0.0-20240214191810-524a5c58fbaa
 	github.com/streamingfast/dstore v0.1.1-0.20241011152904-9acd6205dc14
 	github.com/streamingfast/eth-go v0.0.0-20240312122859-216e183c0b7f
 	github.com/streamingfast/firehose v0.1.1-0.20240118135215-dcf04d40bfcd
-	github.com/streamingfast/firehose-core v1.6.3
+	github.com/streamingfast/firehose-core v1.6.6
 	github.com/streamingfast/firehose-ethereum/types v0.0.0-20240603154554-acc011d4f8c4
 	github.com/streamingfast/jsonpb v0.0.0-20210811021341-3670f0aa02d0
 	github.com/streamingfast/logging v0.0.0-20230608130331-f22c91403091
 	github.com/streamingfast/pbgo v0.0.6-0.20240823134334-812f6a16c5cb
 	github.com/streamingfast/shutter v1.5.0
-	github.com/streamingfast/substreams v1.10.8
+	github.com/streamingfast/substreams v1.11.0
 	github.com/stretchr/testify v1.9.0
 	github.com/test-go/testify v1.1.4
-	github.com/tidwall/gjson v1.14.1
+	github.com/tidwall/gjson v1.18.0
 	go.uber.org/multierr v1.10.0
 	go.uber.org/zap v1.26.0
 	google.golang.org/grpc v1.64.0
@@ -152,7 +152,7 @@ require (
 	github.com/streamingfast/dbin v0.9.1-0.20231117225723-59790c798e2c // indirect
 	github.com/streamingfast/dgrpc v0.0.0-20240423143010-f36784700c9a // indirect
 	github.com/streamingfast/dhammer v0.0.0-20230125192823-c34bbd561bd4 // indirect
-	github.com/streamingfast/dmetering v0.0.0-20240816165719-51768d3da951 // indirect
+	github.com/streamingfast/dmetering v0.0.0-20241101155221-489f5a9d9139 // indirect
 	github.com/streamingfast/dtracing v0.0.0-20220305214756-b5c0e8699839 // indirect
 	github.com/streamingfast/opaque v0.0.0-20210811180740-0c01d37ea308 // indirect
 	github.com/streamingfast/payment-gateway v0.0.0-20240426151444-581e930c76e2 // indirect
