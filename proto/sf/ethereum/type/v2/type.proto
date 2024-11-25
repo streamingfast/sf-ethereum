@@ -239,6 +239,9 @@ message BlockHeader {
 
 	// ParentBeaconRoot was added by EIP-4788 and is ignored in legacy headers.
 	bytes parent_beacon_root = 24;
+
+  // RequestsHash was added by EIP-7685 and is ignored in legacy headers.
+  bytes requests_hash = 25;
 }
 
 message Uint64NestedArray {
