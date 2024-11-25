@@ -6,6 +6,7 @@ for instructions to keep up to date.
 
 ## Unreleased
 
+* Adding `requests_hash` which was added by EIP-7685
 * Adding nil safety check on the `CombinedFilter` and looping over the transaction_trace receipts
 * Bump `substreams` and `dmetering` to latest version adding the `outputModuleHash` to metering sender.
 
@@ -31,7 +32,7 @@ for instructions to keep up to date.
 * Fix bug where some invalid cursors may be sent (with 'LIB' being above the block being sent) and add safeguard/loggin if the bug appears again
 * Fix panic in the whole tier2 process when stores go above the size limit while being read from "kvops" cached changes
 * Fix "cannot resolve 'old cursor' from files in passthrough mode" error on some requests with an old cursor
-* Fix handling of 'special case' substreams module with only "params" as its input: should not skip this execution (used in graph-node for head tracking) 
+* Fix handling of 'special case' substreams module with only "params" as its input: should not skip this execution (used in graph-node for head tracking)
   -> empty files in module cache with hash `d3b1920483180cbcd2fd10abcabbee431146f4c8` should be deleted for consistency
 
 ## v2.7.2
@@ -56,16 +57,16 @@ for instructions to keep up to date.
 ## v2.7.0
 
 * Add `sf.firehose.v2.EndpointInfo/Info` service on Firehose and `sf.substreams.rpc.v2.EndpointInfo/Info` to Substreams endpoints. This involves the following new flags:
-  - `advertise-chain-name` Canonical name of the chain according to https://thegraph.com/docs/en/developing/supported-networks/ (required, unless it is in the "well-known" list)
-  - `advertise-chain-aliases` Alternate names for that chain (optional)
-  - `advertise-block-features` List of features describing the blocks (optional)
-  - `ignore-advertise-validation` Runtime checks of chain name/features/encoding against the genesis block will no longer cause server to wait or fail.
+  * `advertise-chain-name` Canonical name of the chain according to <https://thegraph.com/docs/en/developing/supported-networks/> (required, unless it is in the "well-known" list)
+  * `advertise-chain-aliases` Alternate names for that chain (optional)
+  * `advertise-block-features` List of features describing the blocks (optional)
+  * `ignore-advertise-validation` Runtime checks of chain name/features/encoding against the genesis block will no longer cause server to wait or fail.
 
 * Add a well-known list of chains (hard-coded in `wellknown/chains.go` to help automatically determine the 'advertise' flag values). Users are encouraged to propose Pull Requests to add more chains to the list.
 * The new info endpoint adds a mandatory fetching of the first streamable block on startup, with a failure if no block can be fetched after 3 minutes and you are running `firehose` or `substreams-tier1` service.
   It validates the following on a well-known chain:
-    - if the first-streamable-block Num/ID match the genesis block of a known chain, e.g. `matic`, it will refuse another value for `advertise-chain-name` than `matic` or one of its aliases (`polygon`)
-    - If the first-streamable-block does not match any known chain, it will require the `advertise-chain-name` to be non-empty
+  * if the first-streamable-block Num/ID match the genesis block of a known chain, e.g. `matic`, it will refuse another value for `advertise-chain-name` than `matic` or one of its aliases (`polygon`)
+  * If the first-streamable-block does not match any known chain, it will require the `advertise-chain-name` to be non-empty
 
 * Substreams: add `--common-tmp-dir` flag to activate local caching of pre-compiled WASM modules through wazero v1.8.0 feature (performance improvement on WASM compilation)
 * Substreams: revert module hash calculation from `v2.6.5`, when using a non-zero firstStreamableBlock. Hashes will now be the same even if the chain's first streamable block affects the initialBlock of a module.
@@ -93,15 +94,15 @@ for instructions to keep up to date.
 
 #### Important Substreams BUG FIX
 
-* Fix a bug introduced in v1.6.0 that could result in corrupted store "state" file if all 
+* Fix a bug introduced in v1.6.0 that could result in corrupted store "state" file if all
   the "outputs" were already cached for a module in a given segment (rare occurence)
-* We recommend clearing your substreams cache after this upgrade and re-processing or 
+* We recommend clearing your substreams cache after this upgrade and re-processing or
   validating your data if you use stores.
 
 #### Added
 
 * Expose a new intrinsic to modules: `skip_empty_output`, which causes the module output to be skipped if it has zero bytes. (Watch out, a protobuf object with all its default values will have zero bytes)
-* Improve schedule order (faster time to first block) for substreams with multiple stages when starting mid-chain 
+* Improve schedule order (faster time to first block) for substreams with multiple stages when starting mid-chain
 
 ## v2.6.3
 
@@ -129,7 +130,7 @@ for instructions to keep up to date.
 
 ### Highlights
 
-- Substreams engine is now able run Rust code that depends on `solana_program` in Solana land to decode and `alloy/ether-rs` in Ethereum land
+* Substreams engine is now able run Rust code that depends on `solana_program` in Solana land to decode and `alloy/ether-rs` in Ethereum land
 
 #### How to use `solana_program` or `alloy`/`ether-rs`
 
@@ -188,7 +189,7 @@ binaries:
 
 > **Note** Upgrading will require changing the tier1 and tier2 versions concurrently, as the internal protocol has changed.
 
-* *Index Modules* and *Block Filter* now supported. See https://github.com/streamingfast/substreams-foundational-modules for an example implementation
+* *Index Modules* and *Block Filter* now supported. See <https://github.com/streamingfast/substreams-foundational-modules> for an example implementation
 * Various scheduling and performance improvements
 * env variable `SUBSTREAMS_WORKERS_RAMPUP_TIME` changed from `4s` to `0`. Set it to `4s` to keep previous behavior
 * `otelcol://` tracing protocol no longer supported
@@ -262,7 +263,7 @@ binaries:
 
 ### Substreams
 
-* Substreams bumped to @v1.5.0: See https://github.com/streamingfast/substreams/releases/tag/v1.5.0 for details.
+* Substreams bumped to @v1.5.0: See <https://github.com/streamingfast/substreams/releases/tag/v1.5.0> for details.
 
 #### Chain-agnostic tier2
 
@@ -348,17 +349,17 @@ binaries:
 
 * The `reader-node-bootstrap-url` gained the ability to be bootstrapped from a `bash` script.
 
-	If the bootstrap URL is of the form `bash:///<path/to/script>?<parameters>`, the bash script at
-	`<path/to/script>` will be executed. The script is going to receive in environment variables the resolved
-	reader node variables in the form of `READER_NODE_<VARIABLE_NAME>`. The fully resolved node arguments
-	(from `reader-node-arguments`) are passed as args to the bash script. The query parameters accepted are:
+ If the bootstrap URL is of the form `bash:///<path/to/script>?<parameters>`, the bash script at
+ `<path/to/script>` will be executed. The script is going to receive in environment variables the resolved
+ reader node variables in the form of `READER_NODE_<VARIABLE_NAME>`. The fully resolved node arguments
+ (from `reader-node-arguments`) are passed as args to the bash script. The query parameters accepted are:
 
-	- `arg=<value>` | Pass as extra argument to the script, prepended to the list of resolved node arguments
-	- `env=<key>%3d<value>` | Pass as extra environment variable as `<key>=<value>` with key being upper-cased (multiple(s) allowed)
-	- `env_<key>=<value>` | Pass as extra environment variable as `<key>=<value>` with key being upper-cased (multiple(s) allowed)
-	- `cwd=<path>` | Change the working directory to `<path>` before running the script
-	- `interpreter=<path>` | Use `<path>` as the interpreter to run the script
-	- `interpreter_arg=<arg>` | Pass `<interpreter_arg>` as arguments to the interpreter before the script path (multiple(s) allowed)
+ 	* `arg=<value>` | Pass as extra argument to the script, prepended to the list of resolved node arguments
+ 	* `env=<key>%3d<value>` | Pass as extra environment variable as `<key>=<value>` with key being upper-cased (multiple(s) allowed)
+ 	* `env_<key>=<value>` | Pass as extra environment variable as `<key>=<value>` with key being upper-cased (multiple(s) allowed)
+ 	* `cwd=<path>` | Change the working directory to `<path>` before running the script
+ 	* `interpreter=<path>` | Use `<path>` as the interpreter to run the script
+ 	* `interpreter_arg=<arg>` | Pass `<interpreter_arg>` as arguments to the interpreter before the script path (multiple(s) allowed)
 
   > [!NOTE]
   > The `bash:///` script support is currently experimental and might change in upcoming releases, the behavior changes will be
@@ -437,12 +438,13 @@ The Cancun hard fork happened on Goerli and after further review, we decided to 
 We made explicit that those fields are optional in the Protobuf definition which will render them in your language of choice using the appropriate "null" mechanism. For example on Golang, those fields are generated as `BlobGasUsed *uint64` and `ExcessBlobGas *uint64` which will make it clear that those fields are not populated at all.
 
 The affected fields are:
-  - [BlockHeader.blob_gas_used](./proto/sf/ethereum/type/v2/type.proto#L173), now `optional uint64`.
-  - [BlockHeader.excess_blob_gas](./proto/sf/ethereum/type/v2/type.proto#L176), now `optional uint64`.
-  - [TransactionTrace.blob_gas](./proto/sf/ethereum/type/v2/type.proto#L369), now `optional uint64`.
-  - [TransactionTrace.blob_gas_fee_cap](./proto/sf/ethereum/type/v2/type.proto#L377), now `optional BigInt`.
-  - [TransactionReceipt.blob_gas_used](./proto/sf/ethereum/type/v2/type.proto#L428), now `optional uint64`.
-  - [TransactionReceipt.blob_gas_price](./proto/sf/ethereum/type/v2/type.proto#L436), now `optional BigInt`.
+
+* [BlockHeader.blob_gas_used](./proto/sf/ethereum/type/v2/type.proto#L173), now `optional uint64`.
+* [BlockHeader.excess_blob_gas](./proto/sf/ethereum/type/v2/type.proto#L176), now `optional uint64`.
+* [TransactionTrace.blob_gas](./proto/sf/ethereum/type/v2/type.proto#L369), now `optional uint64`.
+* [TransactionTrace.blob_gas_fee_cap](./proto/sf/ethereum/type/v2/type.proto#L377), now `optional BigInt`.
+* [TransactionReceipt.blob_gas_used](./proto/sf/ethereum/type/v2/type.proto#L428), now `optional uint64`.
+* [TransactionReceipt.blob_gas_price](./proto/sf/ethereum/type/v2/type.proto#L436), now `optional BigInt`.
 
 This is technically a breaking change for those that could have consumed those fields already but we think he impact is so minimal that it's better to make the change right now.
 
@@ -462,28 +464,28 @@ You can reach to us on Discord if you need help on something.
 ## v2.2.1
 
 * Updated the documentation for some of the upcoming new Cancun hard-fork fields:
-  - [TransactionTrace.blob_gas](./proto/sf/ethereum/type/v2/type.proto#L369)
-  - [TransactionReceipt.blob_gas_used](./proto/sf/ethereum/type/v2/type.proto#L428)
-  - [TransactionReceipt.blob_gas_price](./proto/sf/ethereum/type/v2/type.proto#L436)
+  * [TransactionTrace.blob_gas](./proto/sf/ethereum/type/v2/type.proto#L369)
+  * [TransactionReceipt.blob_gas_used](./proto/sf/ethereum/type/v2/type.proto#L428)
+  * [TransactionReceipt.blob_gas_price](./proto/sf/ethereum/type/v2/type.proto#L436)
 
 ## v2.2.0
 
 ### Support for Cancun fork (Goerli: Jan 17th)
 
 * Added support for EIP-4844 (upcoming with activation of Cancun fork), through instrumented go-ethereum nodes with version `fh2.4`. This adds new fields in the Ethereum Block model, fields that will be non-empty when the Ethereum network your pulling have EIP-4844 activated.  The fields in questions are:
-  - [Block.system_calls](./proto/sf/ethereum/type/v2/type.proto#L69)
-  - [BlockHeader.blob_gas_used](./proto/sf/ethereum/type/v2/type.proto#L173)
-  - [BlockHeader.excess_blob_gas](./proto/sf/ethereum/type/v2/type.proto#L176)
-  - [BlockHeader.parent_beacon_root](./proto/sf/ethereum/type/v2/type.proto#L179)
-  - [TransactionTrace.blob_gas](./proto/sf/ethereum/type/v2/type.proto#L369)
-  - [TransactionTrace.blob_gas_fee_cap](./proto/sf/ethereum/type/v2/type.proto#L377)
-  - [TransactionTrace.blob_hashes](./proto/sf/ethereum/type/v2/type.proto#L387)
-  - [TransactionReceipt.blob_gas_used](./proto/sf/ethereum/type/v2/type.proto#L428)
-  - [TransactionReceipt.blob_gas_price](./proto/sf/ethereum/type/v2/type.proto#L436)
-  - A new `TransactionTrace.Type` value [TRX_TYPE_BLOB](./proto/sf/ethereum/type/v2/type.proto#L283)
+  * [Block.system_calls](./proto/sf/ethereum/type/v2/type.proto#L69)
+  * [BlockHeader.blob_gas_used](./proto/sf/ethereum/type/v2/type.proto#L173)
+  * [BlockHeader.excess_blob_gas](./proto/sf/ethereum/type/v2/type.proto#L176)
+  * [BlockHeader.parent_beacon_root](./proto/sf/ethereum/type/v2/type.proto#L179)
+  * [TransactionTrace.blob_gas](./proto/sf/ethereum/type/v2/type.proto#L369)
+  * [TransactionTrace.blob_gas_fee_cap](./proto/sf/ethereum/type/v2/type.proto#L377)
+  * [TransactionTrace.blob_hashes](./proto/sf/ethereum/type/v2/type.proto#L387)
+  * [TransactionReceipt.blob_gas_used](./proto/sf/ethereum/type/v2/type.proto#L428)
+  * [TransactionReceipt.blob_gas_price](./proto/sf/ethereum/type/v2/type.proto#L436)
+  * A new `TransactionTrace.Type` value [TRX_TYPE_BLOB](./proto/sf/ethereum/type/v2/type.proto#L283)
 
 > [!IMPORTANT]
-> Operators running Goerli chain will need to upgrade to this version, with this geth node release: https://github.com/streamingfast/go-ethereum/releases/tag/geth-v1.13.10-fh2.4
+> Operators running Goerli chain will need to upgrade to this version, with this geth node release: <https://github.com/streamingfast/go-ethereum/releases/tag/geth-v1.13.10-fh2.4>
 
 ### Substreams server (bumped to v1.3.1)
 
@@ -536,7 +538,7 @@ You can reach to us on Discord if you need help on something.
 
 ### Highlights
 
-This releases refactor `firehose-ethereum` repository to use the common shared Firehose Core library (https://github.com/streamingfast/firehose-core) that every single Firehose supported chain should use and follow.
+This releases refactor `firehose-ethereum` repository to use the common shared Firehose Core library (<https://github.com/streamingfast/firehose-core>) that every single Firehose supported chain should use and follow.
 
 Both at the data level and gRPC level, there is no changes in behavior to all core components which are `reader-node`, `merger`, `relayer`, `firehose`, `substreams-tier1` and `substreams-tier2`.
 
@@ -559,22 +561,22 @@ You will find below the detailed upgrade procedure for the configuration file op
 
 Here a bullet list for upgrading your instance, we still recommend to fully read each section below, the list here can serve as a check list. The list below is done in such way that you get back the same "instance" as before. The listening addresses changes can be omitted as long as you update other tools to account for the port changes list your load balancer.
 
-- Add config `config-file: ./sf.yaml` if not present already
-- Add config `data-dir: ./sf-data` if not present already
-- Rename config `verbose` to `log-verbosity` if present
-- Add config `common-blocks-cache-dir: ./sf-data/blocks-cache` if not present already
-- Remove config `common-chain-id` if present
-- Remove config `common-deployment-id` if present
-- Remove config `common-network-id` if present
-- Add config `common-live-blocks-addr: :13011` if not present already
-- Add config `relayer-grpc-listen-addr: :13011` if `common-live-blocks-addr` has been added in previous step
-- Add config `reader-node-grpc-listen-addr: :13010` if not present already
-- Add config `relayer-source: :13010` if `reader-node-grpc-listen-addr` has been added in previous step
-- Remove config `reader-node-enforce-peers` if present
-- Remove config `reader-node-log-to-zap` if present
-- Remove config `reader-node-ipc-path` if present
-- Remove config `reader-node-type` if present
-- Replace config `reader-node-arguments: +--<flag1> --<flag2> ...` by `reader-node-arguments: --networkid=<network-id> --datadir={node-data-dir} --port=30305 --http --http.api=eth,net,web3 --http.port=8547 --http.addr=0.0.0.0 --http.vhosts=* --firehose-enabled --<flag1> --<flag2> ...`
+* Add config `config-file: ./sf.yaml` if not present already
+* Add config `data-dir: ./sf-data` if not present already
+* Rename config `verbose` to `log-verbosity` if present
+* Add config `common-blocks-cache-dir: ./sf-data/blocks-cache` if not present already
+* Remove config `common-chain-id` if present
+* Remove config `common-deployment-id` if present
+* Remove config `common-network-id` if present
+* Add config `common-live-blocks-addr: :13011` if not present already
+* Add config `relayer-grpc-listen-addr: :13011` if `common-live-blocks-addr` has been added in previous step
+* Add config `reader-node-grpc-listen-addr: :13010` if not present already
+* Add config `relayer-source: :13010` if `reader-node-grpc-listen-addr` has been added in previous step
+* Remove config `reader-node-enforce-peers` if present
+* Remove config `reader-node-log-to-zap` if present
+* Remove config `reader-node-ipc-path` if present
+* Remove config `reader-node-type` if present
+* Replace config `reader-node-arguments: +--<flag1> --<flag2> ...` by `reader-node-arguments: --networkid=<network-id> --datadir={node-data-dir} --port=30305 --http --http.api=eth,net,web3 --http.port=8547 --http.addr=0.0.0.0 --http.vhosts=* --firehose-enabled --<flag1> --<flag2> ...`
 
   > [!NOTE]
   > The `<network-id>` is dynamic and should be replace with a literal value like `1` for Ethereum Mainnet. The `{node-data-dir}` value is actually a templating value that is going o be resolved for you (resolves to value of config `reader-node-data-dir`).!
@@ -582,21 +584,21 @@ Here a bullet list for upgrading your instance, we still recommend to fully read
   > [!IMPORTANT]
   > Ensure that `--firehose-enabled` is part of the flag! Moreover, tweak flags to avoid repetitions if your were overriding some of them.
 
-- Remove `node` under `start: args:` list
-- Add config `merger-grpc-listen-addr: :13012` if not present already
-- Add config `firehose-grpc-listen-addr: :13042` if not present already
-- Add config `substreams-tier1-grpc-listen-addr: :13044` if not present already
-- Add config `substreams-tier1-grpc-listen-addr: :13044` if not present already
-- Add config `substreams-tier2-grpc-listen-addr: :13045` if not present already
-- Add config `substreams-tier1-subrequests-endpoint: :13045` if `substreams-tier1-grpc-listen-addr` has been added in previous step
-- Replace config `combined-index-builder` to `index-builder` under `start: args:` list
-- Rename config `common-block-index-sizes` to `common-index-block-sizes` if present
-- Rename config `combined-index-builder-grpc-listen-addr` to `index-builder-grpc-listen-addr` if present
-- Add config `index-builder-grpc-listen-addr: :13043` if you didn't have `combined-index-builder-grpc-listen-addr` previously
-- Rename config `combined-index-builder-index-size` to `index-builder-index-size` if present
-- Rename config `combined-index-builder-start-block` to `index-builder-start-block` if present
-- Rename config `combined-index-builder-stop-block` to `index-builder-stop-block` if present
-- Replace any occurrences of `{sf-data-dir}` to `{data-dir}` in any of your configuration values if present
+* Remove `node` under `start: args:` list
+* Add config `merger-grpc-listen-addr: :13012` if not present already
+* Add config `firehose-grpc-listen-addr: :13042` if not present already
+* Add config `substreams-tier1-grpc-listen-addr: :13044` if not present already
+* Add config `substreams-tier1-grpc-listen-addr: :13044` if not present already
+* Add config `substreams-tier2-grpc-listen-addr: :13045` if not present already
+* Add config `substreams-tier1-subrequests-endpoint: :13045` if `substreams-tier1-grpc-listen-addr` has been added in previous step
+* Replace config `combined-index-builder` to `index-builder` under `start: args:` list
+* Rename config `common-block-index-sizes` to `common-index-block-sizes` if present
+* Rename config `combined-index-builder-grpc-listen-addr` to `index-builder-grpc-listen-addr` if present
+* Add config `index-builder-grpc-listen-addr: :13043` if you didn't have `combined-index-builder-grpc-listen-addr` previously
+* Rename config `combined-index-builder-index-size` to `index-builder-index-size` if present
+* Rename config `combined-index-builder-start-block` to `index-builder-start-block` if present
+* Rename config `combined-index-builder-stop-block` to `index-builder-stop-block` if present
+* Replace any occurrences of `{sf-data-dir}` to `{data-dir}` in any of your configuration values if present
 
 #### Common Changes
 
@@ -629,35 +631,35 @@ This change will impact all operators currently running Firehose on Ethereum so 
 
 Before this release, the `reader-node` app was managing for you a portion of the `reader-node-arguments` configuration value, prepending some arguments that would be passed to `geth` when invoking it, the list of arguments that were automatically provided before:
 
-- `--networkid=<value of config value 'common-network-id'>`
-- `--datadir=<value of config value 'reader-node-data-dir'>`
-- `--ipcpath=<value of config value 'reader-node-ipc-path'>`
-- `--port=30305`
-- `--http`
-- `--http.api=eth,net,web3`
-- `--http.port=8547`
-- `--http.addr=0.0.0.0`
-- `--http.vhosts=*`
-- `--firehose-enabled`
+* `--networkid=<value of config value 'common-network-id'>`
+* `--datadir=<value of config value 'reader-node-data-dir'>`
+* `--ipcpath=<value of config value 'reader-node-ipc-path'>`
+* `--port=30305`
+* `--http`
+* `--http.api=eth,net,web3`
+* `--http.port=8547`
+* `--http.addr=0.0.0.0`
+* `--http.vhosts=*`
+* `--firehose-enabled`
 
 We have now removed those magical additions and operators are now responsible of providing the flags they required to properly run a Firehose-enabled native `geth` node. The `+` sign that was used to append/override the flags has been removed also since no default additions is performed, the `+` was now useless. To make some flag easier to define and avoid repetition, a few templating variable can be used within the `reader-node-arguments` value:
 
-- `{data-dir}`         The current data-dir path defined by the config value `data-dir`
-- `{node-data-dir}`    The node data dir path defined by the flag `reader-node-data-dir`
-- `{hostname}`         The machine's hostname
-- `{start-block-num}`  The resolved start block number defined by the flag `reader-node-start-block-num` (can be overwritten)
-- `{stop-block-num}`   The stop block number defined by the flag `reader-node-stop-block-num`
+* `{data-dir}`         The current data-dir path defined by the config value `data-dir`
+* `{node-data-dir}`    The node data dir path defined by the flag `reader-node-data-dir`
+* `{hostname}`         The machine's hostname
+* `{start-block-num}`  The resolved start block number defined by the flag `reader-node-start-block-num` (can be overwritten)
+* `{stop-block-num}`   The stop block number defined by the flag `reader-node-stop-block-num`
 
 As an example, if you provide the config value `reader-node-data-dir=/var/geth` for example, then you could use `reader-node-arguments: --datadir={node-data-dir}` and that would resolve to `reader-node-arguments: --datadir=/var/geth` for you.
 
 > [!NOTE]
-> The `reader-node-arguments` is a string that is parsed using Shell word splitting rules which means for example that double quotes are supported like `--datadir="/var/with space/path"` and the argument will be correctly accepted. We use https://github.com/kballard/go-shellquote as your parsing library.
+> The `reader-node-arguments` is a string that is parsed using Shell word splitting rules which means for example that double quotes are supported like `--datadir="/var/with space/path"` and the argument will be correctly accepted. We use <https://github.com/kballard/go-shellquote> as your parsing library.
 
 We also removed the following `reader-node` configuration value:
 
-- `reader-node-type` (No replacement needed, just remove it)
-- `reader-node-ipc-path` (If you were using that, define it manually using `geth` flag `--ipcpath=...`)
-- `reader-node-enforce-peers` (If you were using that, use a `geth` config file to add static peers to your node, read about static peers for `geth` on the Web)
+* `reader-node-type` (No replacement needed, just remove it)
+* `reader-node-ipc-path` (If you were using that, define it manually using `geth` flag `--ipcpath=...`)
+* `reader-node-enforce-peers` (If you were using that, use a `geth` config file to add static peers to your node, read about static peers for `geth` on the Web)
 
 Default listening addresses changed also to be the same on all `firehose-<...>` project, meaning consistent ports across all chains for operators. The `reader-node-grpc-listen-addr` default listen address went from `:13010` to `:10010` and `reader-node-manager-api-addr` from `:13009` to `:10011`. If you have no occurrences of `13010` or `13009` in your config file or your scripts, there is nothing to do. Otherwise, feel free to adjust the default port to fit your needs, if you do change `reader-node-grpc-listen-addr`, ensure `--relayer-source` is also updated as by default it points to `:10010`.
 
@@ -708,7 +710,7 @@ start:
 ```
 
 > [!NOTE]
-> Adjust the `--networkid=1515` value to fit your targeted chain, see https://chainlist.org/ for a list of Ethereum chain and their `network-id` value.
+> Adjust the `--networkid=1515` value to fit your targeted chain, see <https://chainlist.org/> for a list of Ethereum chain and their `network-id` value.
 
 #### App `node` removed
 
@@ -862,7 +864,8 @@ tools fix-bloated-merged-blocks <merged-blocks-store> <output-store> <start>:<st
 * Bumped substreams to `v1.1.18` with a regression fix for when a substreams has a start block in the reversible segment
 
 ## v1.4.18
-* Bumped substreams to `v1.1.17` with fix `missing decrement on metrics `substreams_active_requests`
+
+* Bumped substreams to `v1.1.17` with fix `missing decrement on metrics`substreams_active_requests`
 
 ## v1.4.17
 
@@ -888,7 +891,8 @@ The `--common-auth-plugin` got back the ability to use `secret://<expected_secre
 ## v1.4.15
 
 ### Fixed
-* (Substreams) fixed regressions for relative start-blocks for substreams (see https://github.com/streamingfast/substreams/releases/tag/v1.1.14)
+
+* (Substreams) fixed regressions for relative start-blocks for substreams (see <https://github.com/streamingfast/substreams/releases/tag/v1.1.14>)
 
 ## v1.4.14
 
@@ -903,7 +907,7 @@ Golang `1.21+` is now also required to build the project.
 ### Fixed
 
 * Fixed post-processing of polygon blocks: some system transactions were not "bundled" correctly.
-* (Substreams) fixed validations for invalid start-blocks (see https://github.com/streamingfast/substreams/releases/tag/v1.1.13)
+* (Substreams) fixed validations for invalid start-blocks (see <https://github.com/streamingfast/substreams/releases/tag/v1.1.13>)
 
 ### Added
 
@@ -1027,7 +1031,6 @@ The app `substreams-tier1` and `substreams-tier2` should be upgraded concurrentl
 
 * Added a check for readiness of the `dauth` provider when answering "/healthz" on firehose and substreams
 
-
 ### Changed
 
 * Changed `--substreams-tier1-debug-request-stats` to `--substreams-tier1-request-stats` which enabled request stats logging on Substreams Tier1
@@ -1049,8 +1052,8 @@ The app `substreams-tier1` and `substreams-tier2` should be upgraded concurrentl
   * common: `--substreams-rpc-cache-chunk-size`,`--substreams-rpc-cache-store-url`,`--substreams-rpc-endpoints`,`--substreams-state-bundle-size`,`--substreams-state-store-url`
   * tier1: `--substreams-tier1-debug-request-stats`,`--substreams-tier1-discovery-service-url`,`--substreams-tier1-grpc-listen-addr`,`--substreams-tier1-max-subrequests`,`--substreams-tier1-subrequests-endpoint`,`--substreams-tier1-subrequests-insecure`,`--substreams-tier1-subrequests-plaintext`,`--substreams-tier1-subrequests-size`
   * tier2: `--substreams-tier2-discovery-service-url`,`--substreams-tier2-grpc-listen-addr`
-* Some auth plugins have been removed, the new available plugins for `--common-auth-plugins` are `trust://` and `grpc://`. See https://github.com/streamingfast/dauth for details
-* Metering features have been added, the available plugins for `--common-metering-plugin` are `null://`, `logger://`, `grpc://`. See https://github.com/streamingfast/dmetering for details
+* Some auth plugins have been removed, the new available plugins for `--common-auth-plugins` are `trust://` and `grpc://`. See <https://github.com/streamingfast/dauth> for details
+* Metering features have been added, the available plugins for `--common-metering-plugin` are `null://`, `logger://`, `grpc://`. See <https://github.com/streamingfast/dmetering> for details
 
 ### Added
 
@@ -1088,9 +1091,9 @@ The app `substreams-tier1` and `substreams-tier2` should be upgraded concurrentl
 ### Highlights
 
 * This release brings an update to `substreams` to `v1.1.4` which includes the following:
-  - Changes the module hash computation implementation to allow reusing caches accross substreams that 'import' other substreams as a dependency.
-  - Faster shutdown of requests that fail deterministically
-  - Fixed memory leak in RPC calls
+  * Changes the module hash computation implementation to allow reusing caches accross substreams that 'import' other substreams as a dependency.
+  * Faster shutdown of requests that fail deterministically
+  * Fixed memory leak in RPC calls
 
 ### Note for Operators
 
@@ -1101,20 +1104,20 @@ The components should be deployed simultaneously to `tier1` and `tier2`, or user
 ### Added
 
 * Added Substreams scheduler tracing support. Enable tracing by setting the ENV variables `SF_TRACING` to one of the following:
-  - `stdout://`
-  - `cloudtrace://[host:port]?project_id=<project_id>&ratio=<0.25>`
-  - `jaeger://[host:port]?scheme=<http|https>`
-  - `zipkin://[host:port]?scheme=<http|https>`
-  - `otelcol://[host:port]`
+  * `stdout://`
+  * `cloudtrace://[host:port]?project_id=<project_id>&ratio=<0.25>`
+  * `jaeger://[host:port]?scheme=<http|https>`
+  * `zipkin://[host:port]?scheme=<http|https>`
+  * `otelcol://[host:port]`
 
 ## v1.4.2
 
 ### Highlights
 
 * This release brings an update to `substreams` to `v1.1.3` which includes the following:
-  - Fixes an important bug that could have generated corrupted store state files. This is important for developers and operators.
-  - Fixes for race conditions that would return a failure when multiple identical requests are backprocessing.
-  - Fixes and speed/scaling improvements around the engine.
+  * Fixes an important bug that could have generated corrupted store state files. This is important for developers and operators.
+  * Fixes for race conditions that would return a failure when multiple identical requests are backprocessing.
+  * Fixes and speed/scaling improvements around the engine.
 
 ### Note for Operators
 
@@ -1123,6 +1126,7 @@ The components should be deployed simultaneously to `tier1` and `tier2`, or user
 This release includes a small change in the internal RPC layer between `tier1` processes and `tier2` processes. This change requires an ordered upgrade of the processes to avoid errors.
 
 The components should be deployed in this order:
+
 1. Deploy and roll out `tier1` processes first
 2. Deploy and roll out `tier2` processes in second
 
@@ -1137,7 +1141,6 @@ If you upgrade in the wrong order or if somehow `tier2` processes start using th
 > **Warning**
 > If you don't use dedicated tier2 nodes, make sure that you don't expose `sf.substreams.internal.v2.Substreams` to the public (from your load-balancer or using a firewall)
 
-
 ### Breaking changes
 
 * flag `substreams-partial-mode-enabled` renamed to `substreams-tier2`
@@ -1150,7 +1153,7 @@ If you upgrade in the wrong order or if somehow `tier2` processes start using th
 Substreams protocol changed from `sf.substreams.v1.Stream/Blocks` to `sf.substreams.rpc.v2.Stream/Blocks` for client-facing service. This changes the way that substreams clients are notified of chain reorgs.
 All substreams clients need to be upgraded to support this new protocol.
 
-See https://github.com/streamingfast/substreams/releases/tag/v1.1.1 for details.
+See <https://github.com/streamingfast/substreams/releases/tag/v1.1.1> for details.
 
 ### Added
 
@@ -1162,7 +1165,7 @@ See https://github.com/streamingfast/substreams/releases/tag/v1.1.1 for details.
 
 This is a bug fix release for node operators that are about to upgrade to Shanghai release. The Firehose instrumented `geth` compatible with Shanghai release introduced a new message `CANCEL_BLOCK`. It seems in some circumstances, we had a bug in the console reader that was actually panicking but the message was received but no block was actively being assembled.
 
-This release fix this bogus behavior by simply ignoring `CANCEL_BLOCK` message when there is no active block which is harmless. Every node operators that upgrade to https://github.com/streamingfast/go-ethereum/releases/tag/geth-v1.11.5-fh2.2 should upgrade to this version.
+This release fix this bogus behavior by simply ignoring `CANCEL_BLOCK` message when there is no active block which is harmless. Every node operators that upgrade to <https://github.com/streamingfast/go-ethereum/releases/tag/geth-v1.11.5-fh2.2> should upgrade to this version.
 
 > **Note** There is no need to update the Firehose instrumented `geth` binary, only `fireeth` needs to be bumped if you already are at the latest `geth` version.
 
@@ -1199,8 +1202,8 @@ If you had previous blocks from a Polygon chain (bor), you will need to reproces
 
 This release now supports the new Firehose node exchange format 2.2 which introduced a new exchanged message `CANCEL_BLOCK`. This has an implication on the Firehose instrumented `Geth` binary you can use with the release.
 
-- If you use Firehose instrumented `Geth` binary tagged `fh2.2` (like `geth-v1.11.4-fh2.2-1`), you must use `firehose-ethereum` version `>= 1.3.6`
-- If you use Firehose instrumented `Geth` binary tagged `fh2.1` (like `geth-v1.11.3-fh2.1`), you can use `firehose-ethereum` version `>= 1.0.0`
+* If you use Firehose instrumented `Geth` binary tagged `fh2.2` (like `geth-v1.11.4-fh2.2-1`), you must use `firehose-ethereum` version `>= 1.3.6`
+* If you use Firehose instrumented `Geth` binary tagged `fh2.1` (like `geth-v1.11.3-fh2.1`), you can use `firehose-ethereum` version `>= 1.0.0`
 
 New releases of Firehose instrumented `Geth` binary for all chain will soon all be tagged `fh2.2`, so upgrade to `>= 1.3.6` of `firehose-ethereum` will be required.
 
@@ -1272,13 +1275,13 @@ Note that when the server is above the limit, it waits 500ms before it returns c
 
 * **Breaking** Config value `substreams-stores-save-interval` and `substreams-output-cache-save-interval` have been merged together as a single value to avoid potential bugs that would arise when the value is different for those two. The new configuration value is called `substreams-cache-save-interval`.
 
-    *  To migrate, remove usage of `substreams-stores-save-interval: <number>` and `substreams-output-cache-save-interval: <number>` if defined in your config file and replace with `substreams-cache-save-interval: <number>`, if you had two different value before, pick the biggest of the two as the new value to put. We are currently setting to `1000` for Ethereum Mainnet.
+  * To migrate, remove usage of `substreams-stores-save-interval: <number>` and `substreams-output-cache-save-interval: <number>` if defined in your config file and replace with `substreams-cache-save-interval: <number>`, if you had two different value before, pick the biggest of the two as the new value to put. We are currently setting to `1000` for Ethereum Mainnet.
 
 ### Fixed
 
 * Fixed various issues with `fireeth tools check merged-blocks`
-    * The `stopWalk` error is not reported as a real `error` anymore.
-    * `Incomplete range` should now be printed more accurately.
+  * The `stopWalk` error is not reported as a real `error` anymore.
+  * `Incomplete range` should now be printed more accurately.
 
 ## v1.3.1
 
@@ -1355,7 +1358,7 @@ you will deploy a new setup that writes blocks to folders `/v3-oneblock`, `v3-fo
 
 This procedure describes an upgrade without any downtime. With proper parallelization, it should be possible to complete this upgrade within a single day.
 
-1. Launch a new reader with this code, running instrumented geth binary: https://github.com/streamingfast/go-ethereum/releases/tag/geth-v1.10.25-fh2.1
+1. Launch a new reader with this code, running instrumented geth binary: <https://github.com/streamingfast/go-ethereum/releases/tag/geth-v1.10.25-fh2.1>
    (you can start from a backup that is close to head)
 2. Upgrade your merged-blocks from `version: 2` to `version: 3` using `fireeth tools upgrade-merged-blocks /path/to/v2 /path/to/v3 {start} {stop}`
    (you can run multiple upgrade commands in parallel to cover the whole blocks range)
@@ -1389,7 +1392,7 @@ This procedure describes an upgrade without any downtime. With proper paralleliz
 
 #### Project rename
 
-* The binary name has changed from `sfeth` to `fireeth` (aligned with https://firehose.streamingfast.io/references/naming-conventions)
+* The binary name has changed from `sfeth` to `fireeth` (aligned with <https://firehose.streamingfast.io/references/naming-conventions>)
 * The repo name has changed from `sf-ethereum` to `firehose-ethereum`
 
 #### Ethereum V2 blocks (with fh2-instrumented nodes)
@@ -1497,7 +1500,7 @@ This procedure describes an upgrade without any downtime. With proper paralleliz
 * The firehose GRPC endpoint now supports requests that are compressed using `gzip` or `zstd`
 * The merger does not expose `PreMergedBlocks` endpoint over GRPC anymore, only HealthCheck. (relayer does not need to talk to it)
 * Automatically setting the flag `--firehose-genesis-file` on `reader` nodes if their `reader-node-bootstrap-data-url` config value is sets to a `genesis.json` file.
-* Note to other Firehose implementors: we changed all command line flags to fit the required/optional format referred to here: https://en.wikipedia.org/wiki/Usage_message
+* Note to other Firehose implementors: we changed all command line flags to fit the required/optional format referred to here: <https://en.wikipedia.org/wiki/Usage_message>
 * Added prometheus boolean metric to all apps called 'ready' with label 'app' (firehose, merger, mindreader-node, node, relayer, combined-index-builder)
 
 ## v0.10.2
@@ -1541,11 +1544,13 @@ This procedure describes an upgrade without any downtime. With proper paralleliz
 * gke-pvc-snapshot backup module
 
 #### Fixed
+
 * Fixed a potential 'panic' in `merger` on a new chain
 
 ## v0.10.0
 
 #### Fixed
+
 * Fixed an issue where the `merger` would get stuck when too many (more than 2000) one-block-files were lying around, with block numbers below the current bundle high boundary.
 
 ## v0.10.0-rc.5
