@@ -4,11 +4,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). See [MAINTAINERS.md](./MAINTAINERS.md)
 for instructions to keep up to date.
 
-## Unreleased
+## v2.7.6
 
 * Adding `requests_hash` which was added by EIP-7685
 * Adding nil safety check on the `CombinedFilter` and looping over the transaction_trace receipts
 * Bump `substreams` and `dmetering` to latest version adding the `outputModuleHash` to metering sender.
+* `firehose-grpc-listen-addr` and `substreams-tier1-grpc-listen-addr` flags now accepts comma-separated addresses (allows listening as plaintext and snakeoil-ssl at the same time or on specific ip addresses)
+* rpc-poller: fix fetching the first block on an endpoint (was not following the cursor, failing unnecessarily on non-archive nodes)
 
 ## v2.7.5
 
