@@ -17,6 +17,13 @@ Quick start with Firehose for Ethereum can be found in the official Firehose doc
   - [Design Principles](https://firehose.streamingfast.io/concepts-and-architeceture/design-principles)
 - [Ethereum Syncing](https://firehose.streamingfast.io/firehose-setup/ethereum)
 
+## Installation
+
+- Using Homebrew (MacOS & Linux): `brew install tap/streamingfast/firehose-ethereum`
+- Using Docker: `alias fireeth='docker run --rm -it -e="SF_API_TOKEN=${SF_API_TOKEN}" ghcr.io/streamingfast/firehose-ethereum'`
+- Using pre-built binary at: https://github.com/streamingfast/firehose-core/releases?q=&expanded=true
+- Compile from source: `go install ./cmd/fireeth`
+
 ## Release
 
 Use the `./bin/release.sh` Bash script to perform a new release. It will ask you questions
