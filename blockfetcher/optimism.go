@@ -19,13 +19,13 @@ func (f *OptimismBlockFetcher) IsBlockAvailable(requested uint64) bool {
 	return f.fetcher.IsBlockAvailable(requested)
 }
 
-func (f *OptimismBlockFetcher) Fetch(ctx context.Context, blockNum uint64) (b *pbbstream.Block, skipped bool, err error) {
-	blk, err := f.fetcher.Fetch(ctx, blockNum)
+func (f *OptimismBlockFetcher) Fetch(ctx context.Context, rpcClient *rpc.Client, blockNum uint64) (b *pbbstream.Block, skipped bool, err error) {
+	blk, err := f.fetcher.Fetch(ctx, rpcClient, blockNum)
 	return blk, false, err
 }
 
-func NewOptimismBlockFetcher(rpcClient *rpc.Client, intervalBetweenFetch time.Duration, latestBlockRetryInterval time.Duration, logger *zap.Logger) *OptimismBlockFetcher {
-	fetcher := NewBlockFetcher(rpcClient, intervalBetweenFetch, latestBlockRetryInterval, block.RpcToEthBlock, logger)
+func NewOptimismBlockFetcher(intervalBetweenFetch time.Duration, latestBlockRetryInterval time.Duration, logger *zap.Logger) *OptimismBlockFetcher {
+	fetcher := NewBlockFetcher(intervalBetweenFetch, latestBlockRetryInterval, block.RpcToEthBlock, logger)
 	return &OptimismBlockFetcher{
 		fetcher: fetcher,
 	}

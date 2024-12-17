@@ -4,6 +4,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). See [MAINTAINERS.md](./MAINTAINERS.md)
 for instructions to keep up to date.
 
+## v2.8.2
+
+* Bump firehose-core to [v1.6.8](https://github.com/streamingfast/firehose-core/releases/tag/v1.6.8)
+* Substreams: add `--substreams-tier1-enforce-compression` to reject connections from clients that do not support GZIP compression
+* Substreams performance: reduced the number of mallocs (patching some third-party libraries)
+* Substreams performance: removed heavy tracing (that wasn't exposed to the client)
+* Fixed `--reader-node-line-buffer-size` flag that was not being respected in reader-node-stdin app
+* poller: add `--max-block-fetch-duration`
+
 ## v2.8.1
 
 * `firehose-grpc-listen-addr` and `substreams-tier1-grpc-listen-addr` flags now accepts comma-separated addresses (allows listening as plaintext and snakeoil-ssl at the same time or on specific ip addresses)

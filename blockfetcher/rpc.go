@@ -20,7 +20,6 @@ import (
 type ToEthBlock func(in *rpc.Block, receipts map[string]*rpc.TransactionReceipt, logger *zap.Logger) (*pbeth.Block, map[string]bool)
 
 type BlockFetcher struct {
-	rpcClient                *rpc.Client
 	latest                   uint64
 	latestBlockRetryInterval time.Duration
 	fetchInterval            time.Duration
@@ -29,9 +28,8 @@ type BlockFetcher struct {
 	logger                   *zap.Logger
 }
 
-func NewBlockFetcher(rpcClient *rpc.Client, intervalBetweenFetch, latestBlockRetryInterval time.Duration, toEthBlock ToEthBlock, logger *zap.Logger) *BlockFetcher {
+func NewBlockFetcher(intervalBetweenFetch, latestBlockRetryInterval time.Duration, toEthBlock ToEthBlock, logger *zap.Logger) *BlockFetcher {
 	return &BlockFetcher{
-		rpcClient:                rpcClient,
 		latestBlockRetryInterval: latestBlockRetryInterval,
 		toEthBlock:               toEthBlock,
 		fetchInterval:            intervalBetweenFetch,
@@ -43,10 +41,10 @@ func (f *BlockFetcher) IsBlockAvailable(blockNum uint64) bool {
 	return blockNum <= f.latest
 }
 
-func (f *BlockFetcher) Fetch(ctx context.Context, blockNum uint64) (block *pbbstream.Block, err error) {
+func (f *BlockFetcher) Fetch(ctx context.Context, rpcClient *rpc.Client, blockNum uint64) (block *pbbstream.Block, err error) {
 	f.logger.Debug("fetching block", zap.Uint64("block_num", blockNum))
 	for f.latest < blockNum {
-		f.latest, err = f.rpcClient.LatestBlockNum(ctx)
+		f.latest, err = rpcClient.LatestBlockNum(ctx)
 		if err != nil {
 			return nil, fmt.Errorf("fetching latest block num: %w", err)
 		}
@@ -65,12 +63,12 @@ func (f *BlockFetcher) Fetch(ctx context.Context, blockNum uint64) (block *pbbst
 		time.Sleep(f.fetchInterval - sinceLastFetch)
 	}
 
-	rpcBlock, err := f.rpcClient.GetBlockByNumber(ctx, rpc.BlockNumber(blockNum), rpc.WithGetBlockFullTransaction())
+	rpcBlock, err := rpcClient.GetBlockByNumber(ctx, rpc.BlockNumber(blockNum), rpc.WithGetBlockFullTransaction())
 	if err != nil {
 		return nil, fmt.Errorf("fetching block %d: %w", blockNum, err)
 	}
 
-	receipts, err := FetchReceipts(ctx, rpcBlock, f.rpcClient)
+	receipts, err := FetchReceipts(ctx, rpcBlock, rpcClient)
 	if err != nil {
 		return nil, fmt.Errorf("fetching receipts for block %d %q: %w", rpcBlock.Number, rpcBlock.Hash.Pretty(), err)
 	}

@@ -11,6 +11,7 @@ import (
 	"github.com/streamingfast/eth-go/rpc"
 	firecore "github.com/streamingfast/firehose-core"
 	"github.com/streamingfast/firehose-core/blockpoller"
+	firecorerpc "github.com/streamingfast/firehose-core/rpc"
 	"github.com/streamingfast/firehose-ethereum/blockfetcher"
 	"github.com/streamingfast/logging"
 	"go.uber.org/zap"
@@ -60,36 +61,42 @@ func newGenericEVMPollerCmd(logger *zap.Logger, tracer logging.Tracer) *cobra.Co
 		RunE:  pollerRunE(logger, tracer),
 	}
 	cmd.Flags().Duration("interval-between-fetch", 0, "interval between fetch")
+	cmd.Flags().Duration("max-block-fetch-duration", 5*time.Second, "maximum delay before retrying a block fetch")
 
 	return cmd
 }
 
 func pollerRunE(logger *zap.Logger, tracer logging.Tracer) firecore.CommandExecutor {
 	return func(cmd *cobra.Command, args []string) (err error) {
-		ctx := cmd.Context()
-
 		rpcEndpoint := args[0]
 		//dataDir := cmd.Flag("data-dir").Value.String()
+		fetchInterval := sflags.MustGetDuration(cmd, "interval-between-fetch")
+		maxBlockFetchDuration := sflags.MustGetDuration(cmd, "max-block-fetch-duration")
 
 		dataDir := sflags.MustGetString(cmd, "data-dir")
 		stateDir := path.Join(dataDir, "poller-state")
-
-		logger.Info("launching firehose-ethereum poller", zap.String("rpc_endpoint", rpcEndpoint), zap.String("data_dir", dataDir), zap.String("state_dir", stateDir))
-
-		rpcClient := rpc.NewClient(rpcEndpoint)
 
 		firstStreamableBlock, err := strconv.ParseUint(args[1], 10, 64)
 		if err != nil {
 			return fmt.Errorf("unable to parse first streamable block %d: %w", firstStreamableBlock, err)
 		}
 
-		fetchInterval := sflags.MustGetDuration(cmd, "interval-between-fetch")
+		logger.Info("launching firehose-ethereum poller",
+			zap.String("rpc_endpoint", rpcEndpoint),
+			zap.String("data_dir", dataDir),
+			zap.String("state_dir", stateDir),
+			zap.Duration("fetch_interval", fetchInterval),
+			zap.Duration("max_block_fetch_duration", maxBlockFetchDuration),
+			zap.Uint64("first_streamable_block", firstStreamableBlock),
+		)
+		rpcClients := firecorerpc.NewClients[*rpc.Client](maxBlockFetchDuration, firecorerpc.NewStickyRollingStrategy[*rpc.Client](), logger)
+		rpcClients.Add(rpc.NewClient(rpcEndpoint))
 
-		fetcher := blockfetcher.NewOptimismBlockFetcher(rpcClient, fetchInterval, 1*time.Second, logger)
+		fetcher := blockfetcher.NewOptimismBlockFetcher(fetchInterval, 1*time.Second, logger)
 		handler := blockpoller.NewFireBlockHandler("type.googleapis.com/sf.ethereum.type.v2.Block")
-		poller := blockpoller.New(fetcher, handler, blockpoller.WithStoringState(stateDir), blockpoller.WithLogger(logger))
+		poller := blockpoller.New[*rpc.Client](fetcher, handler, rpcClients, blockpoller.WithStoringState[*rpc.Client](stateDir), blockpoller.WithLogger[*rpc.Client](logger))
 
-		err = poller.Run(ctx, firstStreamableBlock, 1)
+		err = poller.Run(firstStreamableBlock, nil, 1)
 		if err != nil {
 			return fmt.Errorf("running poller: %w", err)
 		}
