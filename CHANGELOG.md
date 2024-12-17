@@ -4,7 +4,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). See [MAINTAINERS.md](./MAINTAINERS.md)
 for instructions to keep up to date.
 
+## v2.8.3
+
+* Fix broken `tools poller` command in v2.8.2
+
 ## v2.8.2
+
+> [!WARNING]
+> Do NOT use this version with `tools poller`, a flag issue prevents the poller from starting up. Recommended that you upgrade to v2.8.3 ASAP
 
 * Bump firehose-core to [v1.6.8](https://github.com/streamingfast/firehose-core/releases/tag/v1.6.8)
 * Substreams: add `--substreams-tier1-enforce-compression` to reject connections from clients that do not support GZIP compression

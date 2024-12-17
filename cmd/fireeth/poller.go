@@ -38,6 +38,7 @@ func newOptimismPollerCmd(logger *zap.Logger, tracer logging.Tracer) *cobra.Comm
 		RunE:  pollerRunE(logger, tracer),
 	}
 	cmd.Flags().Duration("interval-between-fetch", 0, "interval between fetch")
+	cmd.Flags().Duration("max-block-fetch-duration", 5*time.Second, "maximum delay before retrying a block fetch")
 
 	return cmd
 }
@@ -50,6 +51,7 @@ func newArbOnePollerCmd(logger *zap.Logger, tracer logging.Tracer) *cobra.Comman
 		RunE:  pollerRunE(logger, tracer),
 	}
 	cmd.Flags().Duration("interval-between-fetch", 0, "interval between fetch")
+	cmd.Flags().Duration("max-block-fetch-duration", 5*time.Second, "maximum delay before retrying a block fetch")
 
 	return cmd
 }
