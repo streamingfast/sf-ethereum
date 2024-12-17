@@ -6,12 +6,18 @@ for instructions to keep up to date.
 
 ## v2.8.3
 
+> [!NOTE]
+> This release will reject connections from clients that don't support GZIP compression. Use `--substreams-tier1-enforce-compression=false` to keep previous behavior, then check the logs for `incoming Substreams Blocks request` logs with the value `compressed: false` to track users who are not using compressed HTTP connections.
+
 * Fix broken `tools poller` command in v2.8.2
 
 ## v2.8.2
 
 > [!WARNING]
 > Do NOT use this version with `tools poller`, a flag issue prevents the poller from starting up. Recommended that you upgrade to v2.8.3 ASAP
+
+> [!NOTE]
+> This release will reject connections from clients that don't support GZIP compression. Use `--substreams-tier1-enforce-compression=false` to keep previous behavior, then check the logs for `incoming Substreams Blocks request` logs with the value `compressed: false` to track users who are not using compressed HTTP connections.
 
 * Bump firehose-core to [v1.6.8](https://github.com/streamingfast/firehose-core/releases/tag/v1.6.8)
 * Substreams: add `--substreams-tier1-enforce-compression` to reject connections from clients that do not support GZIP compression
