@@ -6,6 +6,7 @@ for instructions to keep up to date.
 
 ## Unreleased
 
+* Substreams: Fix an issue preventing proper detection of gzip compression when multiple headers are set (ex: python grpc client)
 * Substreams: fix an issue preventing some tier2 requests on last-stage from correctly generating stores. This could lead to some missing "backfilling" jobs and slower time to first block on reconnection.
 
 ## v2.8.3
