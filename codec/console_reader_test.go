@@ -19,7 +19,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"io/ioutil"
 	"math/big"
 	"os"
 	"os/exec"
@@ -57,6 +56,8 @@ func TestParseFromFile(t *testing.T) {
 		{"testdata/read_reward_blob_fee_balance_change.dmlog", nil, nil, true},
 		{"testdata/firehose_format_2.5.dmlog", nil, nil, true},
 		{"testdata/system_call.dmlog", nil, nil, false},
+		{"testdata/log-empty-topics.dmlog", nil, nil, false},
+		{"testdata/log-empty-topics_2.dmlog", nil, nil, false},
 		{"testdata/polygon_calls_after_finalize.dmlog", nil, nil, false},
 		{"testdata/polygon_add_log_0.dmlog", nil, nil, false},
 		{"testdata/polygon_tx_dependency.dmlog", nil, nil, false},
@@ -153,10 +154,10 @@ func TestParseFromFile(t *testing.T) {
 
 			goldenFile := test.deepMindFile + ".golden.json"
 			if os.Getenv("GOLDEN_UPDATE") == "true" {
-				ioutil.WriteFile(goldenFile, buf.Bytes(), os.ModePerm)
+				os.WriteFile(goldenFile, buf.Bytes(), os.ModePerm)
 			}
 
-			cnt, err := ioutil.ReadFile(goldenFile)
+			cnt, err := os.ReadFile(goldenFile)
 			require.NoError(t, err)
 
 			if !assert.JSONEq(t, string(cnt), buf.String()) {
@@ -223,10 +224,10 @@ func TestValueParsing(t *testing.T) {
 func unifiedDiff(t *testing.T, cnt1, cnt2 []byte) string {
 	file1 := "/tmp/gotests-linediff-1"
 	file2 := "/tmp/gotests-linediff-2"
-	err := ioutil.WriteFile(file1, cnt1, 0600)
+	err := os.WriteFile(file1, cnt1, 0600)
 	require.NoError(t, err)
 
-	err = ioutil.WriteFile(file2, cnt2, 0600)
+	err = os.WriteFile(file2, cnt2, 0600)
 	require.NoError(t, err)
 
 	cmd := exec.Command("diff", "-u", file1, file2)
