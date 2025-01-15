@@ -4,6 +4,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). See [MAINTAINERS.md](./MAINTAINERS.md)
 for instructions to keep up to date.
 
+## Unreleased
+
+### Tools
+
+* Enhanced `fireeth tools print merged-blocks` with various small quality of life improvements:
+  - Now accepts a block range instead of a single start block.
+  - Passing a single block as the block range will print this single block alone.
+  - Block range is now optional, defaulting to run until there is no more files to read.
+  - It's possible to pass a merged blocks file directly, with or without an optional range.
+
+### Firehose
+
+> [!IMPORTANT]
+> This release will reject firehose connections from clients that don't support GZIP or ZSTD compression. Use `--firehose-enforce-compression=false` to keep previous behavior, then check the logs for `incoming Substreams Blocks request` logs with the value `compressed: false` to track users who are not using compressed HTTP connections.
+
+> [!IMPORTANT]
+> This release removes the old `sf.firehose.v1` protocol (replaced by `sf.firehose.v2` in 2022, this should not affect any reasonably recent client)
+
+* Add support for ConnectWeb firehose requests.
+* Always use gzip compression on firehose requests for clients that support it (instead of always answering with the same compression as the request).
+
 ## v2.8.4
 
 ### Substreams
