@@ -6,6 +6,10 @@ for instructions to keep up to date.
 
 ## Unreleased
 
+### Reader
+
+* Reader Node Manager HTTP API now accepts `POST http://localhost:10011/v1/restart<?sync=true>` to restart the underlying reader node binary sub-process. This is a alias for `/v1/reload`.
+
 ### Tools
 
 * Enhanced `fireeth tools print merged-blocks` with various small quality of life improvements:
@@ -20,10 +24,15 @@ for instructions to keep up to date.
 > This release will reject firehose connections from clients that don't support GZIP or ZSTD compression. Use `--firehose-enforce-compression=false` to keep previous behavior, then check the logs for `incoming Substreams Blocks request` logs with the value `compressed: false` to track users who are not using compressed HTTP connections.
 
 > [!IMPORTANT]
-> This release removes the old `sf.firehose.v1` protocol (replaced by `sf.firehose.v2` in 2022, this should not affect any reasonably recent client)
+> This release removes the old `sf.firehose.v1` protocol (replaced by `sf.firehose.v2` in 2022, this should not affect any reasonably recent client).
 
 * Add support for ConnectWeb firehose requests.
 * Always use gzip compression on firehose requests for clients that support it (instead of always answering with the same compression as the request).
+
+### Substreams
+
+* Properly accept and compress responses with `gzip` for browser HTTP clients using ConnectWeb with `Accept-Encoding` header
+* Allow setting subscription channel max capacity via `SOURCE_CHAN_SIZE` env var (default: 100)
 
 ## v2.8.4
 
