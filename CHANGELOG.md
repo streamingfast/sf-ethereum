@@ -4,7 +4,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). See [MAINTAINERS.md](./MAINTAINERS.md)
 for instructions to keep up to date.
 
-## Unreleased
+## v2.9.0
 
 ### Reader
 
@@ -30,6 +30,28 @@ for instructions to keep up to date.
 * Always use gzip compression on firehose requests for clients that support it (instead of always answering with the same compression as the request).
 
 ### Substreams
+
+* The `substreams-tier1` app now has two new configuration flags named respectively `substreams-tier1-active-requests-soft-limit` and `substreams-tier1-active-requests-hard-limit`
+helping better load balance active requests across a pool of `tier1` instances.
+
+  The `substreams-tier1-active-requests-soft-limit` limits the number of client active requests that a tier1 accepts before starting
+  to be report itself as 'unready' within the health check endpoint. A limit of 0 or less means no limit.
+
+  This is useful to load balance active requests more easily across a pool of tier1 instance. When the instance reaches the soft
+        limit, it will start to be unready from the load balancer standpoint. The load balancer in return will remove it from the list
+        of available instances, and new connections will be routed to remaining clients, spreading the load.
+
+        The `substreams-tier1-active-requests-hard-limit` limits the number of client active requests that a tier1 accepts before
+  rejecting incoming gRPC requests with 'Unavailable' code and setting itself as unready. A limit of 0 or less means no limit.
+
+  This is useful to prevent the tier1 from being overwhelmed by too many requests, most client auto-reconnects on 'Unavailable' code
+  so they should end up on another tier1 instance, assuming you have proper auto-scaling of the number of instances available.
+
+* The `substreams-tier1` app now exposes a new Prometheus metric `substreams_tier1_rejected_request_counter` that tracks rejected
+  requests. The counter is labelled by the gRPC/ConnectRPC returned code (`ok` and `canceled` are not considered rejected requests).
+
+* The `substreams-tier2` app now exposes a new Prometheus metric `substreams_tier2_rejected_request_counter` that tracks rejected
+  requests. The counter is labelled by the gRPC/ConnectRPC returned code (`ok` and `canceled` are not considered rejected requests).
 
 * Properly accept and compress responses with `gzip` for browser HTTP clients using ConnectWeb with `Accept-Encoding` header
 * Allow setting subscription channel max capacity via `SOURCE_CHAN_SIZE` env var (default: 100)
