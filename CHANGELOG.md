@@ -4,6 +4,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). See [MAINTAINERS.md](./MAINTAINERS.md)
 for instructions to keep up to date.
 
+## v2.9.1
+
+* Add back `grpc.health.v1.Health` service to `firehose` and `substreams-tier1` services (regression in 2.9.0)
+* Give precedence to the tracing header `X-Cloud-Trace-Context` over `Traceparent` to prevent user systems' trace IDs from leaking passed a GCP load-balancer
+
 ## v2.9.0
 
 ### Reader
