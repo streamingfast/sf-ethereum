@@ -50,7 +50,7 @@ func registerGethEnforcePeersCmd(parent *cobra.Command, binary string, logger *z
 				"enforce-peers",
 				"Enforce provided peers to be connected to the node, this tools is meant to run as a sidecar to a Geth node",
 				Flags(func(flags *pflag.FlagSet) {
-					flags.BoolP("once", "o", false, "Run as a unit operation and avoid launching a long running process")
+					flags.Bool("once", false, "Run as a unit operation and avoid launching a long running process")
 					flags.String("ipc-file-path", "", "Path to the IPC file to connect to")
 					flags.StringArray("ensure-peers", nil, "List of peers to ensure connection to")
 				}),
