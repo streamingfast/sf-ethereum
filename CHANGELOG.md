@@ -6,7 +6,7 @@ for instructions to keep up to date.
 
 ## v2.9.2
 
-* Fixed `substreams-tier2` not setting itself ready correctly on startup since `v1.7.0`.
+* Fixed `substreams-tier2` not setting itself ready correctly on startup since `v2.9.0`.
 
 * Added support for `--output=bytes` mode which prints the chain's specific Protobuf block as bytes, the encoding for the bytes string printed is determined by `--bytes-encoding`, uses `hex` by default.
 
