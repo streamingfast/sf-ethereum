@@ -4,6 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). See [MAINTAINERS.md](./MAINTAINERS.md)
 for instructions to keep up to date.
 
+## v2.9.4
+
+- Bump `substreams` lib to `v1.12.3`
+  - Improved logging of requests beginning/end
+  - Improved `noop` mode (now sends less data)
+
 ## v2.9.3
 
 * Fixed `fireeth tools geth enforce-peers --once` shorthand flag registration now collapsing with `fireeth tools -o (for --output)`.
