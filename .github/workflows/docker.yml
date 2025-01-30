@@ -266,7 +266,7 @@ jobs:
             type=ref,event=tag,suffix=-${{ env.VERSION }}
             type=ref,event=tag,suffix=-${{ matrix.binary.name }}
             type=sha,prefix=,suffix=-${{ env.VERSION }},enable=true
-            type=sha,prefix=,suffix=-${{ matrix.binary }},enable=true
+            type=sha,prefix=,suffix=-${{ matrix.binary.name }},enable=true
             type=raw,prefix=,suffix=-${{ env.VERSION }},enable=${{ github.ref == 'refs/heads/develop' }},value=develop
             type=raw,prefix=,suffix=-${{ matrix.binary.name }},enable=${{ github.ref == 'refs/heads/develop' }},value=develop
             type=raw,prefix=,suffix=-${{ env.VERSION }},enable=${{ github.ref == 'refs/heads/dockerbuild' }},value=manual
