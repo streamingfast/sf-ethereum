@@ -130,6 +130,8 @@ func Chain() *firecore.Chain[*pbeth.Block] {
 
 				Parse: parseTransformFlags,
 			},
+
+			SanitizeBlockForCompare: SanitizeEthereumBlockForCompare,
 		},
 
 		InfoResponseFiller: fillChainInfoResponse,
