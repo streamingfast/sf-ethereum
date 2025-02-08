@@ -1,0 +1,31 @@
+start:
+  args:
+  - merger
+  - reader-node
+  - relayer
+  - firehose
+  - index-builder
+  flags:
+    # We have set `authrpc.addr` and `http.addr` to `0.0.0.0` so that RPC listen on all interfaces, we also
+    # set `authrpc.vhosts` and `http.vhosts` to `*` to accept connections from any hosts. You are responsible
+    # to ensure foreign access to these connection are protected.
+    reader-node-arguments:
+      --vmtrace=firehose
+      --syncmode=full
+      --synctarget=0x77d5b3c364c5ee339195eb1a6a1ebabe69a6ea3d3aaefa7e54fbc89441c4ff09
+      --holesky
+      --datadir={node-data-dir}
+      --db.engine=pebble
+      --state.scheme=path
+      --port=30305
+      --authrpc.jwtsecret=jwt.txt
+      --authrpc.addr=0.0.0.0
+      --authrpc.port=9551
+      --authrpc.vhosts=*
+      --http
+      --http.addr=0.0.0.0
+      --http.api=eth,net,web3
+      --http.port=9545
+      --http.vhosts=*
+      --port=40303
+      --ws.port=9546
