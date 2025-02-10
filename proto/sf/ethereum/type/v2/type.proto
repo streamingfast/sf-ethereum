@@ -154,13 +154,10 @@ message BlockHeader {
   // consensus algorithm, this field will actually be constant and set to `0x00`.
   BigInt difficulty = 8;
 
-  // TotalDifficulty is the sum of all previous blocks difficulty including this block difficulty.
+  // TotalDifficulty used to be the sum of all previous blocks difficulty including this block difficulty.
   //
-  // If the Block containing this `BlockHeader` has been produced using the Proof of Stake
-  // consensus algorithm, this field will actually be constant and set to the terminal total difficulty
-  // that was required to transition to Proof of Stake algorithm, which varies per network. It is set to
-  // 58 750 000 000 000 000 000 000 on Ethereum Mainnet and to 10 790 000 on Ethereum Testnet Goerli.
-  BigInt total_difficulty = 17;
+  // It has been deprecated in geth v1.15.0 but was already removed from the JSON-RPC interface for a while
+  BigInt total_difficulty = 17 [deprecated = true];
 
   uint64 number = 9;
   uint64 gas_limit = 10;
@@ -346,6 +343,11 @@ message TransactionTrace {
     //
     // Activated in Dencun
     TRX_TYPE_BLOB = 3;
+
+    // Transaction that sets code to an EOA (Externally Owned Accounts)
+    //
+    // Activated in Prague (eip-7702)
+    TRX_TYPE_SET_CODE = 4;
 
     // Arbitrum-specific transactions
     TRX_TYPE_ARBITRUM_DEPOSIT = 100;
