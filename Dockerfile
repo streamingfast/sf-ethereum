@@ -1,6 +1,6 @@
 ARG COREVERSION="latest"
 
-FROM golang:1.22-alpine as build
+FROM golang:1.23.4 as build
 WORKDIR /app
 
 COPY go.mod go.sum ./

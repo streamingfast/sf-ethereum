@@ -2,7 +2,7 @@ ARG CHAIN_DOCKER_VERSION="latest"
 
 ####
 
-FROM golang:1.22-bookworm as builder
+FROM golang:1.23.4-bookworm as builder
 WORKDIR /work
 COPY go.mod go.sum ./
 RUN go mod download
